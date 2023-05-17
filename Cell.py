@@ -25,3 +25,8 @@ class Cell:
     def removeFigure(self):
         self._figure = None
 
+    def getFigure(self):
+        return self._figure
+
+    def __str__(self):
+        return str(self.getFigure())
