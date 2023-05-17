@@ -1,10 +1,10 @@
-from Bishop import Bishop
-from King import King
-from Knight import Knight
-from Queen import Queen
-from Rook import Rook
-from Pawn import Pawn
 from Cell import Cell
+from Figures.Bishop import Bishop
+from Figures.King import King
+from Figures.Knight import Knight
+from Figures.Pawn import Pawn
+from Figures.Queen import Queen
+from Figures.Rook import Rook
 
 
 class Borad:

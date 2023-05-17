@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from Board import *
+from Components.Board import *
 
 board = Borad()
 board.placeFigures()
