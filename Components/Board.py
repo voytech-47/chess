@@ -53,6 +53,7 @@ class Borad:
     def get_board(self):
         return self.board
 
-    # def __str__(self):
-    #     print(self.get_board())
-    #     return ''
+    def __str__(self):
+        for row in self.get_board():
+            print([str(cell) for cell in row])
+        return ''
