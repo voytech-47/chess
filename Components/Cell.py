@@ -33,4 +33,6 @@ class Cell:
         return self._figure
 
     def __str__(self):
+        if self.getFigure() is None:
+            return ' '
         return str(self.getFigure())

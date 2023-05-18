@@ -7,6 +7,7 @@ board.placeFigures()
 
 print(board)
 board.move("e2", "e4")
-print(board)
+board.move("e7", 'e5')
+board.move("g1", "f3")
+# print(board)
 # print(board.translateXY("e2"))
-

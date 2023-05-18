@@ -13,7 +13,10 @@ class Chessfigure:
         return self._directions
 
     def set_directions(self, value):
-        self._directions = value
+        if self.get_color() == 'black':
+            self._directions = [(-x, -y) for x, y in value]
+        else:
+            self._directions = value
 
     def get_color(self):
         return self._color
@@ -27,14 +30,13 @@ class Chessfigure:
     def set_value(self, value):
         self._value = value
 
-    def isMoveLegal(self, source, destination):
+    def moved(self):
+        self._hasMoved = True
+
+    def isMovePossible(self, source, destination):
         directions = self.get_directions()
         for direction in directions:
             result = list(map(sum, zip(source, direction)))
             if result == destination:
                 return True
         return False
-
-    # def moveFigure(self, source, destination):
-    #     if not self.isMoveLegal(source, destination):
-    #         raise Exception("Illegal move")

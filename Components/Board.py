@@ -73,17 +73,21 @@ class Borad:
 
     def __str__(self):
         for row in list(reversed(self.get_board())):
-            print([str(cell) for cell in row])
+            print([str(cell) if cell is not None else ' ' for cell in row])
         print(f"Turn: {self.getTurn()}")
         return ''
+
 
     def move(self, source, destination):
         source = self.translateXY(source)
         destination = self.translateXY(destination)
         sourceCell = self.get_board()[source[1]][source[0]]
-        if not sourceCell.getFigure().isMoveLegal(source, destination):
-            raise Exception("Illegal move")
+        if not sourceCell.getFigure().isMovePossible(source, destination):
+            raise Exception("Move not possible")
+        if sourceCell.getFigure().get_color() != self.getTurn():
+            raise Exception("Not your turn")
         destinationCell = self.get_board()[destination[1]][destination[0]]
         destinationCell.placeFigure(sourceCell.getFigure())
         sourceCell.removeFigure()
         self.changeTurn()
+        self.prettyPrint()
