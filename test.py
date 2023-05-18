@@ -1,2 +1,2 @@
-for x in range(0, 8, 7):
+for x in range(7, -1, -1):
     print(x)

@@ -19,6 +19,9 @@ class Cell:
     def getY(self):
         return self._y
 
+    def getXY(self):
+        return [self.getX(), self.getY()]
+
     def placeFigure(self, figure):
         self._figure = figure
 

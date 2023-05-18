@@ -1,9 +1,9 @@
-from Chessfigure import Chessfigure
+from Figures.Chessfigure import Chessfigure
 
 
 class Rook(Chessfigure):
     def __init__(self, color):
-        super().__init__(color, 5)
+        super().__init__(color, 5, [(0, 0)])
 
     def __str__(self):
         return f'{self.get_color()} rook'
