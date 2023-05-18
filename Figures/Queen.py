@@ -12,6 +12,6 @@ class Queen(Chessfigure):
 
     def isMovePossible(self, source, destination):
         if (source[0] == destination[0] or source[1] == destination[1]) or (
-                source[0] - destination[0] == source[1] - destination[1]):
+                abs(source[0] - destination[0]) == abs(source[1] - destination[1])):
             return True
         return False

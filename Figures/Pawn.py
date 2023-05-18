@@ -18,8 +18,9 @@ class Pawn(Chessfigure):
         # return f"{'♙' if self.get_color() == 'white' else '♟︎'}"
 
     def moved(self):
-        self._hasMoved = True
-        try:
-            self.get_directions().remove((0, 2))
-        except ValueError:
-            self.get_directions().remove((0, -2))
+        if not self._hasMoved:
+            try:
+                self.get_directions().remove((0, 2))
+            except ValueError:
+                self.get_directions().remove((0, -2))
+            self._hasMoved = True

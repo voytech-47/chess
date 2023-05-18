@@ -19,11 +19,11 @@ class Borad:
                 self.board[y].append(cell)
 
     def placeFigures(self):
-        # for y in range(8):
-        #     whitePawn = Pawn('white')
-        #     self.board[1][y].placeFigure(whitePawn)
-        #     blackPawn = Pawn('black')
-        #     self.board[-2][y].placeFigure(blackPawn)
+        for y in range(8):
+            whitePawn = Pawn('white')
+            self.board[1][y].placeFigure(whitePawn)
+            blackPawn = Pawn('black')
+            self.board[-2][y].placeFigure(blackPawn)
 
         for y in range(0, 8, 7):
             whiteRook = Rook('white')
@@ -82,15 +82,80 @@ class Borad:
         print('\n|--------------|')
         return ''
 
+    def isMoveLegal(self, sourceCell, destinationCell):
+        try:
+            if sourceCell.getFigure().get_color() == destinationCell.getFigure().get_color():
+                return False
+        except AttributeError:
+            pass
+        if sourceCell.getFigure().__class__.__name__ == "Knight":
+            return True
+
+        board = self.get_board()
+        if sourceCell.getX() == destinationCell.getX():
+
+            stop = abs(sourceCell.getY() - destinationCell.getY())
+            if sourceCell.getY() < destinationCell.getY():
+                for y in range(stop):
+                    if board[sourceCell.getY() + 1 + y][sourceCell.getX()].getFigure() is not None:
+                        return False
+                return True
+            else:
+                for y in range(stop):
+                    if board[sourceCell.getY() - 1 - y][sourceCell.getX()].getFigure() is not None:
+                        return False
+                return True
+
+        elif sourceCell.getY() == destinationCell.getY():
+            stop = abs(sourceCell.getX() - destinationCell.getX())
+            if sourceCell.getX() < destinationCell.getX():
+                for x in range(stop):
+                    if board[sourceCell.getY()][sourceCell.getX() + 1 + x].getFigure() is not None:
+                        return False
+                return True
+            else:
+                for x in range(stop):
+                    if board[sourceCell.getY()][sourceCell.getX() - 1 - x].getFigure() is not None:
+                        return False
+                return True
+
+        else:
+            stop = abs(sourceCell.getX() - destinationCell.getX())
+            if sourceCell.getX() < destinationCell.getX() and sourceCell.getY() < destinationCell.getY():
+                for xy in range(stop):
+                    if board[sourceCell.getY() + xy + 1][sourceCell.getX() + xy + 1].getFigure() is not None:
+                        return False
+                return True
+            elif sourceCell.getX() < destinationCell.getX() and sourceCell.getY() > destinationCell.getY():
+                for xy in range(stop):
+                    if board[sourceCell.getY() - xy - 1][sourceCell.getX() + xy + 1].getFigure() is not None:
+                        return False
+                return True
+            elif sourceCell.getX() > destinationCell.getX() and sourceCell.getY() > destinationCell.getY():
+                for xy in range(stop):
+                    if board[sourceCell.getY() - 1 - xy][sourceCell.getX() - 1 - xy].getFigure() is not None:
+                        return False
+                return True
+            elif sourceCell.getX() > destinationCell.getX() and sourceCell.getY() < destinationCell.getY():
+                for xy in range(stop):
+                    if board[sourceCell.getY() + 1 + xy][sourceCell.getX() - 1 - xy].getFigure() is not None:
+                        return False
+                return True
+
+    def checkTurn(self, sourceCell):
+        if sourceCell.getFigure().get_color() != self.getTurn():
+            raise Exception("Not your turn")
+
     def move(self, source, destination):
         source = self.translateXY(source)
         destination = self.translateXY(destination)
         sourceCell = self.get_board()[source[1]][source[0]]
+        destinationCell = self.get_board()[destination[1]][destination[0]]
+        self.checkTurn(sourceCell)
         if not sourceCell.getFigure().isMovePossible(source, destination) or source == destination:
             raise Exception("Move not possible")
-        if sourceCell.getFigure().get_color() != self.getTurn():
-            raise Exception("Not your turn")
-        destinationCell = self.get_board()[destination[1]][destination[0]]
+        if not self.isMoveLegal(sourceCell, destinationCell):
+            raise Exception("Move not legal")
         destinationCell.placeFigure(sourceCell.getFigure())
         sourceCell.removeFigure()
         self.changeTurn()
