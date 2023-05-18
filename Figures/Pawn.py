@@ -7,7 +7,7 @@ class Pawn(Chessfigure):
         super().__init__(color, 1, [(0, 1), (0, 2)])
 
     def __str__(self):
-        return f'{self.get_color()} pawn'
+        return f"{'♙' if self.get_color() == 'white' else '♟︎'}"
 
     def moved(self):
         self._hasMoved = True

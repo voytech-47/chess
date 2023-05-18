@@ -5,4 +5,4 @@ class Knight(Chessfigure):
         super().__init__(color, 3, [(0, 0)])
 
     def __str__(self):
-        return f'{self.get_color()} knight'
+        return f"{'♘' if self.get_color() == 'white' else '♞'}"

@@ -87,4 +87,3 @@ class Borad:
         destinationCell.placeFigure(sourceCell.getFigure())
         sourceCell.removeFigure()
         self.changeTurn()
-        return

@@ -6,4 +6,4 @@ class Queen(Chessfigure):
         super().__init__(color, 9, [(0, 0)])
 
     def __str__(self):
-        return f'{self.get_color()} queen'
+        return f"{'♕' if self.get_color() == 'white' else '♛'}"
