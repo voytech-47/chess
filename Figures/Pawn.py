@@ -1,4 +1,5 @@
 from Figures.Chessfigure import Chessfigure
+from colors import red, green
 
 
 class Pawn(Chessfigure):
@@ -13,7 +14,8 @@ class Pawn(Chessfigure):
             self._directions = value
 
     def __str__(self):
-        return f"{'♙' if self.get_color() == 'white' else '♟︎'}"
+        return f"{green('P') if self.get_color() == 'white' else red('P')}"
+        # return f"{'♙' if self.get_color() == 'white' else '♟︎'}"
 
     def moved(self):
         self._hasMoved = True

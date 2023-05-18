@@ -13,10 +13,11 @@ class Chessfigure:
         return self._directions
 
     def set_directions(self, value):
-        if self.get_color() == 'black':
-            self._directions = [(-x, -y) for x, y in value]
-        else:
-            self._directions = value
+        if value is not None:
+            if self.get_color() == 'black':
+                self._directions = [(-x, -y) for x, y in value]
+            else:
+                self._directions = value
 
     def get_color(self):
         return self._color

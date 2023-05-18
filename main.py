@@ -6,8 +6,12 @@ board = Borad()
 board.placeFigures()
 
 print(board)
-board.move("e2", "e4")
-board.move("e7", 'e5')
-board.move("g1", "f3")
+
+board.move("e1", "f2")
+board.move("d8", 'a5')
+board.move("f2", "f3")
+board.move("a5", 'b2')
+# board.move("f8", "b4")  # [5, 7], [1, 3]
+
 # print(board)
 # print(board.translateXY("e2"))

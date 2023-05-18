@@ -19,11 +19,11 @@ class Borad:
                 self.board[y].append(cell)
 
     def placeFigures(self):
-        for y in range(8):
-            whitePawn = Pawn('white')
-            self.board[1][y].placeFigure(whitePawn)
-            blackPawn = Pawn('black')
-            self.board[-2][y].placeFigure(blackPawn)
+        # for y in range(8):
+        #     whitePawn = Pawn('white')
+        #     self.board[1][y].placeFigure(whitePawn)
+        #     blackPawn = Pawn('black')
+        #     self.board[-2][y].placeFigure(blackPawn)
 
         for y in range(0, 8, 7):
             whiteRook = Rook('white')
@@ -73,16 +73,20 @@ class Borad:
 
     def __str__(self):
         for row in list(reversed(self.get_board())):
-            print([str(cell) if cell is not None else ' ' for cell in row])
-        print(f"Turn: {self.getTurn()}")
+            for cell in row:
+                if cell.getFigure() is None:
+                    print(' ', end=' ')
+                else:
+                    print(cell, end=' ')
+            print()
+        print('\n|--------------|')
         return ''
-
 
     def move(self, source, destination):
         source = self.translateXY(source)
         destination = self.translateXY(destination)
         sourceCell = self.get_board()[source[1]][source[0]]
-        if not sourceCell.getFigure().isMovePossible(source, destination):
+        if not sourceCell.getFigure().isMovePossible(source, destination) or source == destination:
             raise Exception("Move not possible")
         if sourceCell.getFigure().get_color() != self.getTurn():
             raise Exception("Not your turn")
@@ -90,4 +94,4 @@ class Borad:
         destinationCell.placeFigure(sourceCell.getFigure())
         sourceCell.removeFigure()
         self.changeTurn()
-        self.prettyPrint()
+        print(self)
