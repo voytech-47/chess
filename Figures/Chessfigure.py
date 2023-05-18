@@ -2,6 +2,7 @@ class Chessfigure:
     _directions = []
     _color = None
     _value = None
+    _hasMoved = False
 
     def __init__(self, color, value, directions):
         self.set_color(color)
@@ -26,8 +27,14 @@ class Chessfigure:
     def set_value(self, value):
         self._value = value
 
-    def isMoveLegal(self, destination):
-        pass
+    def isMoveLegal(self, source, destination):
+        directions = self.get_directions()
+        for direction in directions:
+            result = list(map(sum, zip(source, direction)))
+            if result == destination:
+                return True
+        return False
 
-    def moveFigure(self, destination):
-        self.isMoveLegal(destination)
+    # def moveFigure(self, source, destination):
+    #     if not self.isMoveLegal(source, destination):
+    #         raise Exception("Illegal move")

@@ -1,2 +1,4 @@
-for x in range(7, -1, -1):
-    print(x)
+a = [2, 2]
+b = (0, 2)
+print(list(map(sum, zip(a, b))))
+print()

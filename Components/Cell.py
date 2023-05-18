@@ -26,6 +26,7 @@ class Cell:
         self._figure = figure
 
     def removeFigure(self):
+        self._figure.moved()
         self._figure = None
 
     def getFigure(self):
