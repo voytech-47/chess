@@ -5,12 +5,17 @@ from Figures.Knight import Knight
 from Figures.Pawn import Pawn
 from Figures.Queen import Queen
 from Figures.Rook import Rook
+from colored import bg, attr
+
+moved = bg(101)
+reset = attr('reset')
 
 
 class Borad:
     board = [[] for i in range(8)]
     # turn = 0 -> white, turn = 1 -> black
     turn = 0
+    _recentlyMoved = []
 
     def __init__(self):
         for x in range(8):
@@ -74,10 +79,16 @@ class Borad:
     def __str__(self):
         for row in list(reversed(self.get_board())):
             for cell in row:
+                if cell.hasMoved():
+                    print(moved, end='')
                 if cell.getFigure() is None:
-                    print(' ', end=' ')
+                    if cell.hasMoved():
+                        print(' '+reset, end=' ')
+                    else:
+                        print(' ', end=' ')
                 else:
                     print(cell, end=' ')
+                print(reset, end='')
             print()
         print('\n|--------------|')
         return ''
@@ -146,7 +157,17 @@ class Borad:
         if sourceCell.getFigure().get_color() != self.getTurn():
             raise Exception("Not your turn")
 
+    def resetRecentlyMoved(self):
+        for cell in self._recentlyMoved:
+            cell.set_hasMoved(False)
+        self._recentlyMoved.clear()
+
+    def addRecentlyMoved(self, source, destination):
+        self._recentlyMoved.append(source)
+        self._recentlyMoved.append(destination)
+
     def move(self, source, destination):
+        self.resetRecentlyMoved()
         source = self.translateXY(source)
         destination = self.translateXY(destination)
         sourceCell = self.get_board()[source[1]][source[0]]
@@ -157,6 +178,9 @@ class Borad:
         if not self.isMoveLegal(sourceCell, destinationCell):
             raise Exception("Move not legal")
         destinationCell.placeFigure(sourceCell.getFigure())
+        destinationCell.set_hasMoved(True)
         sourceCell.removeFigure()
+        sourceCell.set_hasMoved(True)
+        self.addRecentlyMoved(sourceCell, destinationCell)
         self.changeTurn()
         print(self)

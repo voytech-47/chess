@@ -2,10 +2,17 @@ class Cell:
     _x = None
     _y = None
     _figure = None
+    _hasMoved = False
 
     def __init__(self, x, y):
         self.setX(x)
         self.setY(y)
+
+    def hasMoved(self):
+        return self._hasMoved
+
+    def set_hasMoved(self, value):
+        self._hasMoved = value
 
     def setX(self, x):
         self._x = x
