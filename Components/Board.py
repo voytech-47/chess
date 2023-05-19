@@ -123,8 +123,14 @@ class Borad:
                 return False
         except AttributeError:
             pass
+
         if sourceCell.getFigure().__class__.__name__ == "Knight":
             return True
+
+        if sourceCell.getFigure().__class__.__name__ == "Pawn":
+            if sourceCell.getFigure().isMovePossible(sourceCell, destinationCell):
+                return True
+            return False
 
         if sourceCell.getX() == destinationCell.getX():
             if self.checkVertical(sourceCell, destinationCell):
