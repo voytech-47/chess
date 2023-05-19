@@ -142,19 +142,11 @@ class Borad:
         if sourceCell.getFigure().get_color() != self.getTurn():
             raise Exception("Not your turn")
 
-    def checkVertical(self, source: Cell, destination: Cell) -> bool:
-        board = self.get_board()
-        stop = abs(source.getY() - destination.getY())
-        if source.getY() < destination.getY():
-            for y in range(stop):
-                if board[source.getY() + 1 + y][source.getX()].getFigure() is not None:
-                    return False
+    def checkForCheck(self, turn: str) -> bool:
+        king = self.get_king(turn)
+        if self.checkVerticalCheck(king) or self.checkHorizontalCheck(king) or self.checkDiagonalCheck(king):
             return True
-        else:
-            for y in range(stop):
-                if board[source.getY() - 1 - y][source.getX()].getFigure() is not None:
-                    return False
-            return True
+        return False
 
     def checkHorizontalCheck(self, king: Cell):
         row = self.get_board()[king.getY()]
@@ -172,7 +164,57 @@ class Borad:
                 return True
         return False
 
-    def checkHorziontal(self, source: Cell, destination: Cell, mode=0) -> bool:
+    def checkDiagonalCheck(self, king: Cell):
+        board = self.get_board()
+        x = king.getX()
+        y = king.getY()
+        while x > 0 and y > 0:
+            cell = board[y - 1][x - 1]
+            if cell.getFigure() is not None and cell.getFigure().isMovePossible(cell, king):
+                return True
+            x, y = x - 1, y - 1
+
+        x = king.getX()
+        y = king.getY()
+        while x < 7 and y < 7:
+            cell = board[y + 1][x + 1]
+            if cell.getFigure() is not None and cell.getFigure().isMovePossible(cell, king):
+                return True
+            x, y = x + 1, y + 1
+
+        x = king.getX()
+        y = king.getY()
+        while x > 0 and y < 7:
+            cell = board[y + 1][x - 1]
+            if cell.getFigure() is not None and cell.getFigure().isMovePossible(cell, king):
+                return True
+            x, y = x - 1, y + 1
+
+        x = king.getX()
+        y = king.getY()
+        while x < 7 and y > 0:
+            cell = board[y - 1][x + 1]
+            if cell.getFigure() is not None and cell.getFigure().isMovePossible(cell, king):
+                return True
+            x, y = x + 1, y + 1
+
+        return False
+
+    def checkVertical(self, source: Cell, destination: Cell) -> bool:
+        board = self.get_board()
+        stop = abs(source.getY() - destination.getY())
+        if source.getY() < destination.getY():
+            for y in range(stop):
+                if board[source.getY() + 1 + y][source.getX()].getFigure() is not None:
+                    return False
+            return True
+        else:
+            for y in range(stop):
+                if board[source.getY() - 1 - y][source.getX()].getFigure() is not None:
+                    return False
+            return True
+
+    def checkHorziontal(self, source: Cell, destination: Cell) -> bool:
         board = self.get_board()
         stop = abs(source.getX() - destination.getX())
         if source.getX() < destination.getX():
@@ -232,7 +274,8 @@ class Borad:
             raise Exception("Move not possible")
         if not self.isMoveLegal(sourceCell, destinationCell):
             raise Exception("Move not legal")
-
+        # if not self.checkForCheck(self.getTurn()):
+        #     raise Exception("There is a check")
         if destinationCell.getFigure() is not None:
             self.capture(sourceCell, destinationCell)
         destinationCell.placeFigure(sourceCell.getFigure())
