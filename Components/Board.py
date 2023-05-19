@@ -124,10 +124,7 @@ class Borad:
         except AttributeError:
             pass
 
-        if sourceCell.getFigure().__class__.__name__ == "Knight":
-            return True
-
-        if sourceCell.getFigure().__class__.__name__ == "Pawn":
+        if sourceCell.getFigure().__class__.__name__ == "Knight" or sourceCell.getFigure().__class__.__name__ == "Pawn":
             if sourceCell.getFigure().isMovePossible(sourceCell, destinationCell):
                 return True
             return False
@@ -219,7 +216,7 @@ class Borad:
         sourceCell = self.get_board()[source[1]][source[0]]
         destinationCell = self.get_board()[destination[1]][destination[0]]
         self.checkTurn(sourceCell)
-        if not sourceCell.getFigure().isMovePossible(source, destination) or source == destination:
+        if not sourceCell.getFigure().isMovePossible(sourceCell, destinationCell) or source == destination:
             raise Exception("Move not possible")
         if not self.isMoveLegal(sourceCell, destinationCell):
             raise Exception("Move not legal")

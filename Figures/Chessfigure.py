@@ -34,10 +34,3 @@ class Chessfigure:
     def moved(self):
         self._hasMoved = True
 
-    def isMovePossible(self, source, destination):
-        directions = self.get_directions()
-        for direction in directions:
-            result = list(map(sum, zip(source, direction)))
-            if result == destination:
-                return True
-        return False
