@@ -21,12 +21,26 @@ class Borad:
         "black": 0
     }
     _capturedFigures = []
+    _whiteKing: Cell = None
+    _blackKing: Cell = None
 
     def __init__(self):
         for x in range(8):
             for y in range(8):
                 cell = Cell(x, y)
                 self.board[y].append(cell)
+
+    def get_blackKing(self) -> Cell:
+        return self._blackKing
+
+    def set_blackKing(self, value: Cell):
+        self._blackKing = value
+
+    def get_whiteKing(self) -> Cell:
+        return self._whiteKing
+
+    def set_whiteKing(self, value: Cell):
+        self._whiteKing = value
 
     def increacePoints(self, player: str, amount: int):
         self.points[player] += amount
@@ -62,22 +76,24 @@ class Borad:
         self.board[-1][3].placeFigure(blackQueen)
         whiteKing = King('white')
         self.board[0][4].placeFigure(whiteKing)
+        self.set_whiteKing(self.board[0][4])
         blackKing = King('black')
         self.board[-1][4].placeFigure(blackKing)
+        self.set_blackKing(self.board[-1][4])
 
-    def get_board(self):
+    def get_board(self) -> list:
         return self.board
 
     def changeTurn(self):
         self.turn = (self.turn + 1) % 2
 
-    def getTurn(self):
+    def getTurn(self) -> str:
         if self.turn:
             return "black"
         return "white"
 
     @staticmethod
-    def translateXY(xy):
+    def translateXY(xy: str) -> list:
         x = ord(xy[0]) - 97
         y = int(xy[1]) - 1
         if x not in range(0, 8) or y not in range(0, 8):
@@ -101,7 +117,7 @@ class Borad:
         print('\n|--------------|')
         return ''
 
-    def isMoveLegal(self, sourceCell, destinationCell):
+    def isMoveLegal(self, sourceCell: Cell, destinationCell: Cell) -> bool:
         try:
             if sourceCell.getFigure().get_color() == destinationCell.getFigure().get_color():
                 return False
@@ -110,76 +126,87 @@ class Borad:
         if sourceCell.getFigure().__class__.__name__ == "Knight":
             return True
 
-        board = self.get_board()
-
-        # when moving vertically
         if sourceCell.getX() == destinationCell.getX():
-            stop = abs(sourceCell.getY() - destinationCell.getY())
-            if sourceCell.getY() < destinationCell.getY():
-                for y in range(stop):
-                    if board[sourceCell.getY() + 1 + y][sourceCell.getX()].getFigure() is not None:
-                        return False
+            if self.checkVertical(sourceCell, destinationCell):
                 return True
-            else:
-                for y in range(stop):
-                    if board[sourceCell.getY() - 1 - y][sourceCell.getX()].getFigure() is not None:
-                        return False
-                return True
-
-        # when moving vertically
+            return False
         elif sourceCell.getY() == destinationCell.getY():
-            stop = abs(sourceCell.getX() - destinationCell.getX())
-            if sourceCell.getX() < destinationCell.getX():
-                for x in range(stop):
-                    if board[sourceCell.getY()][sourceCell.getX() + 1 + x].getFigure() is not None:
-                        return False
+            if self.checkHorziontal(sourceCell, destinationCell):
                 return True
-            else:
-                for x in range(stop):
-                    if board[sourceCell.getY()][sourceCell.getX() - 1 - x].getFigure() is not None:
-                        return False
-                return True
-
-        # when moving diagonally
+            return False
         else:
-            stop = abs(sourceCell.getX() - destinationCell.getX())
-            if sourceCell.getX() < destinationCell.getX() and sourceCell.getY() < destinationCell.getY():
-                for xy in range(stop):
-                    if board[sourceCell.getY() + xy + 1][sourceCell.getX() + xy + 1].getFigure() is not None:
-                        if board[sourceCell.getY() + xy + 1][sourceCell.getX() + xy + 1]\
-                                .getFigure().get_color() == sourceCell.getFigure().get_color():
-                            return False
+            if self.checkDiagonal(sourceCell, destinationCell):
                 return True
-            elif sourceCell.getX() < destinationCell.getX() and sourceCell.getY() > destinationCell.getY():
-                for xy in range(stop):
-                    if board[sourceCell.getY() - xy - 1][sourceCell.getX() + xy + 1].getFigure() is not None:
-                        return False
-                return True
-            elif sourceCell.getX() > destinationCell.getX() and sourceCell.getY() > destinationCell.getY():
-                for xy in range(stop):
-                    if board[sourceCell.getY() - 1 - xy][sourceCell.getX() - 1 - xy].getFigure() is not None:
-                        return False
-                return True
-            elif sourceCell.getX() > destinationCell.getX() and sourceCell.getY() < destinationCell.getY():
-                for xy in range(stop):
-                    if board[sourceCell.getY() + 1 + xy][sourceCell.getX() - 1 - xy].getFigure() is not None:
-                        return False
-                return True
+            return False
 
-    def checkTurn(self, sourceCell):
+    def checkTurn(self, sourceCell: Cell):
         if sourceCell.getFigure().get_color() != self.getTurn():
             raise Exception("Not your turn")
+
+    def checkVertical(self, source: Cell, destination: Cell) -> bool:
+        board = self.get_board()
+        stop = abs(source.getY() - destination.getY())
+        if source.getY() < destination.getY():
+            for y in range(stop):
+                if board[source.getY() + 1 + y][source.getX()].getFigure() is not None:
+                    return False
+            return True
+        else:
+            for y in range(stop):
+                if board[source.getY() - 1 - y][source.getX()].getFigure() is not None:
+                    return False
+            return True
+
+    def checkHorziontal(self, source: Cell, destination: Cell) -> bool:
+        board = self.get_board()
+        stop = abs(source.getX() - destination.getX())
+        if source.getX() < destination.getX():
+            for x in range(stop):
+                if board[source.getY()][source.getX() + 1 + x].getFigure() is not None:
+                    return False
+            return True
+        else:
+            for x in range(stop):
+                if board[source.getY()][source.getX() - 1 - x].getFigure() is not None:
+                    return False
+            return True
+
+    def checkDiagonal(self, source: Cell, destination: Cell) -> bool:
+        board = self.get_board()
+        stop = abs(source.getX() - destination.getX())
+        if source.getX() < destination.getX() and source.getY() < destination.getY():
+            for xy in range(stop):
+                if board[source.getY() + xy + 1][source.getX() + xy + 1].getFigure() is not None:
+                    if board[source.getY() + xy + 1][source.getX() + xy + 1] \
+                            .getFigure().get_color() == source.getFigure().get_color():
+                        return False
+            return True
+        elif source.getX() < destination.getX() and source.getY() > destination.getY():
+            for xy in range(stop):
+                if board[source.getY() - xy - 1][source.getX() + xy + 1].getFigure() is not None:
+                    return False
+            return True
+        elif source.getX() > destination.getX() and source.getY() > destination.getY():
+            for xy in range(stop):
+                if board[source.getY() - 1 - xy][source.getX() - 1 - xy].getFigure() is not None:
+                    return False
+            return True
+        elif source.getX() > destination.getX() and source.getY() < destination.getY():
+            for xy in range(stop):
+                if board[source.getY() + 1 + xy][source.getX() - 1 - xy].getFigure() is not None:
+                    return False
+            return True
 
     def resetRecentlyMoved(self):
         for cell in self._recentlyMoved:
             cell.set_hasMoved(False)
         self._recentlyMoved.clear()
 
-    def addRecentlyMoved(self, source, destination):
+    def addRecentlyMoved(self, source: Cell, destination: Cell):
         self._recentlyMoved.append(source)
         self._recentlyMoved.append(destination)
 
-    def move(self, source, destination):
+    def move(self, source: str, destination: str):
         self.resetRecentlyMoved()
         source = self.translateXY(source)
         destination = self.translateXY(destination)
@@ -190,6 +217,7 @@ class Borad:
             raise Exception("Move not possible")
         if not self.isMoveLegal(sourceCell, destinationCell):
             raise Exception("Move not legal")
+
         if destinationCell.getFigure() is not None:
             self.capture(sourceCell, destinationCell)
         destinationCell.placeFigure(sourceCell.getFigure())
@@ -202,4 +230,4 @@ class Borad:
 
     def capture(self, source: Cell, destination: Cell):
         self.increacePoints(source.getFigure().get_color(), destination.getFigure().get_value())
-        print(f"{source.getFigure().get_color()} player: +{destination.getFigure().get_value()} points")
+        print(f"{source.getFigure().get_color()} player: +{destination.getFigure().get_value()} point(s)")

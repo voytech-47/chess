@@ -12,9 +12,9 @@ board.placeFigures()
 
 print(board)
 
-board.move("c1", "h6")
-board.move("h7", "h6")
 board.move("d2", "d3")
+board.move("h7", "h6")
+board.move("c1", "h6")
 # board.move("b8", "c6")
 # board.move("c2", "c4")
 # board.move("g8", "f6")
