@@ -11,6 +11,6 @@ class Rook(Chessfigure):
         # return f"{'♖' if self.get_color() == 'white' else '♜'}"
 
     def isMovePossible(self, source, destination):
-        if source[0] == destination[0] or source[1] == destination[1]:
+        if source.getX() == destination.getX() or source.getY() == destination.getY():
             return True
         return False

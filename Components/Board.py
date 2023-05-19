@@ -21,8 +21,10 @@ class Borad:
         "black": 0
     }
     _capturedFigures = []
-    _whiteKing: Cell = None
-    _blackKing: Cell = None
+    _kings = {
+        "white": None,
+        "black": None
+    }
 
     def __init__(self):
         for x in range(8):
@@ -30,17 +32,11 @@ class Borad:
                 cell = Cell(x, y)
                 self.board[y].append(cell)
 
-    def get_blackKing(self) -> Cell:
-        return self._blackKing
+    def get_king(self, color: str) -> Cell:
+        return self._kings[color]
 
-    def set_blackKing(self, value: Cell):
-        self._blackKing = value
-
-    def get_whiteKing(self) -> Cell:
-        return self._whiteKing
-
-    def set_whiteKing(self, value: Cell):
-        self._whiteKing = value
+    def set_king(self, color: str, king: Cell):
+        self._kings[color] = king
 
     def increacePoints(self, player: str, amount: int):
         self.points[player] += amount
@@ -76,10 +72,10 @@ class Borad:
         self.board[-1][3].placeFigure(blackQueen)
         whiteKing = King('white')
         self.board[0][4].placeFigure(whiteKing)
-        self.set_whiteKing(self.board[0][4])
+        self.set_king("white", self.board[0][4])
         blackKing = King('black')
         self.board[-1][4].placeFigure(blackKing)
-        self.set_blackKing(self.board[-1][4])
+        self.set_king("black", self.board[-1][4])
 
     def get_board(self) -> list:
         return self.board
@@ -160,7 +156,23 @@ class Borad:
                     return False
             return True
 
-    def checkHorziontal(self, source: Cell, destination: Cell) -> bool:
+    def checkHorizontalCheck(self, king: Cell):
+        row = self.get_board()[king.getY()]
+        for cell in row:
+            if cell.getFigure() is not None and cell.getFigure().isMovePossible(cell, king) and cell is not king:
+                return True
+        return False
+
+    def checkVerticalCheck(self, king: Cell):
+        board = self.get_board()
+        x = king.getX()
+        for i in range(8):
+            cell = board[i][x]
+            if cell.getFigure() is not None and cell.getFigure().isMovePossible(cell, king) and cell is not king:
+                return True
+        return False
+
+    def checkHorziontal(self, source: Cell, destination: Cell, mode=0) -> bool:
         board = self.get_board()
         stop = abs(source.getX() - destination.getX())
         if source.getX() < destination.getX():

@@ -11,6 +11,6 @@ class King(Chessfigure):
         # return f"{'♔' if self.get_color() == 'white' else '♚'}"
 
     def isMovePossible(self, source, destination):
-        if abs(source[0] - destination[0]) <= 1 and abs(source[1] - destination[1]) <= 1:
+        if abs(source.getX() - destination.getX()) <= 1 and abs(source.getY() - destination.getY()) <= 1:
             return True
         return False

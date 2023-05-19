@@ -11,6 +11,6 @@ class Bishop(Chessfigure):
         # return f"{'♗' if self.get_color() == 'white' else '♝'}"
 
     def isMovePossible(self, source, destination):
-        if abs(source[0] - destination[0]) == abs(source[1] - destination[1]):
+        if abs(source.getX() - destination.getX()) == abs(source.getY() - destination.getY()):
             return True
         return False
