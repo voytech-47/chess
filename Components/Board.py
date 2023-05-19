@@ -16,12 +16,20 @@ class Borad:
     # turn = 0 -> white, turn = 1 -> black
     turn = 0
     _recentlyMoved = []
+    points = {
+        "white": 0,
+        "black": 0
+    }
+    _capturedFigures = []
 
     def __init__(self):
         for x in range(8):
             for y in range(8):
                 cell = Cell(x, y)
                 self.board[y].append(cell)
+
+    def increacePoints(self, player: str, amount: int):
+        self.points[player] += amount
 
     def placeFigures(self):
         for y in range(8):
@@ -83,7 +91,7 @@ class Borad:
                     print(moved, end='')
                 if cell.getFigure() is None:
                     if cell.hasMoved():
-                        print(' '+reset, end=' ')
+                        print(' ' + reset, end=' ')
                     else:
                         print(' ', end=' ')
                 else:
@@ -103,8 +111,9 @@ class Borad:
             return True
 
         board = self.get_board()
-        if sourceCell.getX() == destinationCell.getX():
 
+        # when moving vertically
+        if sourceCell.getX() == destinationCell.getX():
             stop = abs(sourceCell.getY() - destinationCell.getY())
             if sourceCell.getY() < destinationCell.getY():
                 for y in range(stop):
@@ -117,6 +126,7 @@ class Borad:
                         return False
                 return True
 
+        # when moving vertically
         elif sourceCell.getY() == destinationCell.getY():
             stop = abs(sourceCell.getX() - destinationCell.getX())
             if sourceCell.getX() < destinationCell.getX():
@@ -130,12 +140,15 @@ class Borad:
                         return False
                 return True
 
+        # when moving diagonally
         else:
             stop = abs(sourceCell.getX() - destinationCell.getX())
             if sourceCell.getX() < destinationCell.getX() and sourceCell.getY() < destinationCell.getY():
                 for xy in range(stop):
                     if board[sourceCell.getY() + xy + 1][sourceCell.getX() + xy + 1].getFigure() is not None:
-                        return False
+                        if board[sourceCell.getY() + xy + 1][sourceCell.getX() + xy + 1]\
+                                .getFigure().get_color() == sourceCell.getFigure().get_color():
+                            return False
                 return True
             elif sourceCell.getX() < destinationCell.getX() and sourceCell.getY() > destinationCell.getY():
                 for xy in range(stop):
@@ -177,6 +190,8 @@ class Borad:
             raise Exception("Move not possible")
         if not self.isMoveLegal(sourceCell, destinationCell):
             raise Exception("Move not legal")
+        if destinationCell.getFigure() is not None:
+            self.capture(sourceCell, destinationCell)
         destinationCell.placeFigure(sourceCell.getFigure())
         destinationCell.set_hasMoved(True)
         sourceCell.removeFigure()
@@ -184,3 +199,7 @@ class Borad:
         self.addRecentlyMoved(sourceCell, destinationCell)
         self.changeTurn()
         print(self)
+
+    def capture(self, source: Cell, destination: Cell):
+        self.increacePoints(source.getFigure().get_color(), destination.getFigure().get_value())
+        print(f"{source.getFigure().get_color()} player: +{destination.getFigure().get_value()} points")
