@@ -7,8 +7,8 @@ from colored import bg, fg, attr
 green = bg('indian_red_1a') + fg('green')
 reset = attr('reset')
 
-board = Borad()
-board.placeFigures()
+board = Board()
+board.place_figures()
 
 print(board)
 
@@ -29,7 +29,7 @@ board.move("c1", "h6")
 # board.move("g5", "h4")
 # board.move("e8", "f8")
 
-# print('print'+reset+'after')
+# print('print'+reset_background+'after')
 
 # board.move("f8", "b4")  # [5, 7], [1, 3]
 

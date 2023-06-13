@@ -2,44 +2,44 @@ class Cell:
     _x = None
     _y = None
     _figure = None
-    _hasMoved = False
+    _has_moved = False
 
     def __init__(self, x, y):
-        self.setX(x)
-        self.setY(y)
+        self.set_x(x)
+        self.set_y(y)
 
-    def hasMoved(self):
-        return self._hasMoved
+    def has_moved(self):
+        return self._has_moved
 
-    def set_hasMoved(self, value):
-        self._hasMoved = value
+    def set_has_moved(self, value):
+        self._has_moved = value
 
-    def setX(self, x):
+    def set_x(self, x):
         self._x = x
 
-    def setY(self, y):
+    def set_y(self, y):
         self._y = y
 
-    def getX(self):
+    def get_x(self):
         return self._x
 
-    def getY(self):
+    def get_y(self):
         return self._y
 
-    def getXY(self):
-        return [self.getX(), self.getY()]
+    def get_xy(self):
+        return [self.get_x(), self.get_y()]
 
-    def placeFigure(self, figure):
+    def place_figure(self, figure):
         self._figure = figure
 
-    def removeFigure(self):
+    def remove_figure(self):
         self._figure.moved()
         self._figure = None
 
-    def getFigure(self):
+    def get_figure(self):
         return self._figure
 
     def __str__(self):
-        if self.getFigure() is None:
+        if self.get_figure() is None:
             return ' '
-        return str(self.getFigure())
+        return str(self.get_figure())

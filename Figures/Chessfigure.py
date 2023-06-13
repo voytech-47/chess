@@ -4,20 +4,9 @@ class Chessfigure:
     _value = None
     _hasMoved = False
 
-    def __init__(self, color, value, directions):
+    def __init__(self, color, value):
         self.set_color(color)
         self.set_value(value)
-        self.set_directions(directions)
-
-    def get_directions(self):
-        return self._directions
-
-    def set_directions(self, value):
-        if value is not None:
-            if self.get_color() == 'black':
-                self._directions = [(-x, -y) for x, y in value]
-            else:
-                self._directions = value
 
     def get_color(self):
         return self._color
@@ -34,3 +23,12 @@ class Chessfigure:
     def moved(self):
         self._hasMoved = True
 
+    def is_knight(self):
+        if self.__class__.__name__ == "Knight":
+            return True
+        return False
+
+    def is_pawn(self):
+        if self.get_value() == 1:
+            return True
+        return False

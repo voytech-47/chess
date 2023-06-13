@@ -4,13 +4,13 @@ from colors import red, green
 
 class King(Chessfigure):
     def __init__(self, color):
-        super().__init__(color, 4, None)
+        super().__init__(color, 4)
 
     def __str__(self):
         return f"{green('K') if self.get_color() == 'white' else red('K')}"
         # return f"{'♔' if self.get_color() == 'white' else '♚'}"
 
-    def isMovePossible(self, source, destination):
-        if abs(source.getX() - destination.getX()) <= 1 and abs(source.getY() - destination.getY()) <= 1:
+    def is_move_possible(self, source, destination):
+        if abs(source.get_x() - destination.get_x()) <= 1 and abs(source.get_y() - destination.get_y()) <= 1:
             return True
         return False

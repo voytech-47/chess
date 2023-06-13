@@ -3,45 +3,48 @@ from colors import red, green
 
 
 class Pawn(Chessfigure):
-    _capturingDirections = None
+    _capturing_directions = None
+    _directions = None
 
     def __init__(self, color):
-        super().__init__(color, 1, [(0, 1), (0, 2)])
+        super().__init__(color, 1)
         if color == "white":
-            self.set_capturingDirections([(1, 1), (-1, 1)])
+            self.set_capturing_directions([(1, 1), (-1, 1)])
+            self.set_directions([(0, 1), (0, 2)])
         else:
-            self.set_capturingDirections([(1, -1), (-1, -1)])
+            self.set_capturing_directions([(1, -1), (-1, -1)])
+            self.set_directions([(0, -1), (0, -2)])
 
-    def get_capturingDirections(self):
-        return self._capturingDirections
+    def get_capturing_directions(self):
+        return self._capturing_directions
 
-    def set_capturingDirections(self, value):
-        self._capturingDirections = value
+    def set_capturing_directions(self, value):
+        self._capturing_directions = value
 
-    def set_directions(self, value):
-        if self.get_color() == 'black':
-            self._directions = [(-x, -y) for x, y in value]
-        else:
-            self._directions = value
+    def get_directions(self):
+        return self._directions
+
+    def set_directions(self, directions):
+        self._directions = directions
 
     def __str__(self):
         return f"{green('P') if self.get_color() == 'white' else red('P')}"
         # return f"{'♙' if self.get_color() == 'white' else '♟︎'}"
 
-    def isMovePossible(self, source, destination):
-        if source.getX() == destination.getX():
+    def is_move_possible(self, source, destination):
+        if source.get_x() == destination.get_x():
             directions = self.get_directions()
             for direction in directions:
-                result = list(map(sum, zip([source.getX(), source.getY()], direction)))
-                if result == [destination.getX(), destination.getY()]:
+                result = list(map(sum, zip([source.get_x(), source.get_y()], direction)))
+                if result == [destination.get_x(), destination.get_y()]:
                     return True
             return False
         else:
-            if destination.getFigure() is not None and destination.getFigure().get_color() != self.get_color():
-                capturingDirections = self.get_capturingDirections()
+            if destination.get_figure() is not None and destination.get_figure().get_color() != self.get_color():
+                capturingDirections = self.get_capturing_directions()
                 for direction in capturingDirections:
-                    result = list(map(sum, zip([source.getX(), source.getY()], direction)))
-                    if result == [destination.getX(), destination.getY()]:
+                    result = list(map(sum, zip([source.get_x(), source.get_y()], direction)))
+                    if result == [destination.get_x(), destination.get_y()]:
                         return True
                 return False
             return False
