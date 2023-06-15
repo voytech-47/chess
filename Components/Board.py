@@ -113,38 +113,13 @@ class Board:
         print('\n|--------------|')
         return ''
 
-    def is_move_legal(self, source_cell: Cell, destination_cell: Cell) -> bool:
-        try:
-            if source_cell.get_figure().get_color() == destination_cell.get_figure().get_color():
-                return False
-        except AttributeError:
-            pass
-
-        if source_cell.get_figure().is_knight() or source_cell.get_figure().is_pawn():
-            if source_cell.get_figure().is_move_possible(source_cell, destination_cell):
-                return True
-            return False
-
-        if source_cell.get_x() == destination_cell.get_x():
-            if self.check_vertical(source_cell, destination_cell):
-                return True
-            return False
-        elif source_cell.get_y() == destination_cell.get_y():
-            if self.check_horziontal(source_cell, destination_cell):
-                return True
-            return False
-        else:
-            if self.check_diagonal(source_cell, destination_cell):
-                return True
-            return False
-
     def check_turn(self, source_cell: Cell):
         if source_cell.get_figure().get_color() != self.get_turn():
             raise Exception("Not your turn")
 
     def check_for_check(self, turn: str) -> bool:
         king = self.get_king(turn)
-        if self.check_vartical_check(king) or self.check_horizontal_check(king) or self.check_diagonal_check(king):
+        if self.check_vertical_check(king) or self.check_horizontal_check(king) or self.check_diagonal_check(king):
             return True
         return False
 
@@ -155,7 +130,7 @@ class Board:
                 return True
         return False
 
-    def check_vartical_check(self, king: Cell):
+    def check_vertical_check(self, king: Cell):
         board = self.get_board()
         x = king.get_x()
         for i in range(8):
@@ -196,63 +171,9 @@ class Board:
             cell = board[y - 1][x + 1]
             if cell.get_figure() is not None and cell.get_figure().is_move_possible(cell, king):
                 return True
-            x, y = x + 1, y + 1
+            x, y = x + 1, y - 1
 
         return False
-
-    def check_vertical(self, source: Cell, destination: Cell) -> bool:
-        board = self.get_board()
-        stop = abs(source.get_y() - destination.get_y())
-        if source.get_y() < destination.get_y():
-            for y in range(stop):
-                if board[source.get_y() + 1 + y][source.get_x()].get_figure() is not None:
-                    return False
-            return True
-        else:
-            for y in range(stop):
-                if board[source.get_y() - 1 - y][source.get_x()].get_figure() is not None:
-                    return False
-            return True
-
-    def check_horziontal(self, source: Cell, destination: Cell) -> bool:
-        board = self.get_board()
-        stop = abs(source.get_x() - destination.get_x())
-        if source.get_x() < destination.get_x():
-            for x in range(stop):
-                if board[source.get_y()][source.get_x() + 1 + x].get_figure() is not None:
-                    return False
-            return True
-        else:
-            for x in range(stop):
-                if board[source.get_y()][source.get_x() - 1 - x].get_figure() is not None:
-                    return False
-            return True
-
-    def check_diagonal(self, source: Cell, destination: Cell) -> bool:
-        board = self.get_board()
-        stop = abs(source.get_x() - destination.get_x())
-        if source.get_x() < destination.get_x() and source.get_y() < destination.get_y():
-            for xy in range(stop):
-                if board[source.get_y() + xy + 1][source.get_x() + xy + 1].get_figure() is not None:
-                    if board[source.get_y() + xy + 1][source.get_x() + xy + 1] \
-                            .get_figure().get_color() == source.get_figure().get_color():
-                        return False
-            return True
-        elif source.get_x() < destination.get_x() and source.get_y() > destination.get_y():
-            for xy in range(stop):
-                if board[source.get_y() - xy - 1][source.get_x() + xy + 1].get_figure() is not None:
-                    return False
-            return True
-        elif source.get_x() > destination.get_x() and source.get_y() > destination.get_y():
-            for xy in range(stop):
-                if board[source.get_y() - 1 - xy][source.get_x() - 1 - xy].get_figure() is not None:
-                    return False
-            return True
-        elif source.get_x() > destination.get_x() and source.get_y() < destination.get_y():
-            for xy in range(stop):
-                if board[source.get_y() + 1 + xy][source.get_x() - 1 - xy].get_figure() is not None:
-                    return False
-            return True
 
     def reset_recently_moved(self):
         for cell in self._recently_moved:
@@ -272,7 +193,7 @@ class Board:
         self.check_turn(source_cell)
         if not source_cell.get_figure().is_move_possible(source_cell, destination_cell) or source == destination:
             raise Exception("Move not possible")
-        if not self.is_move_legal(source_cell, destination_cell):
+        if not source_cell.get_figure().is_move_legal(source_cell, destination_cell, self.get_board()):
             raise Exception("Move not legal")
         # if not self.checkForCheck(self.getTurn()):
         #     raise Exception("There is a check")
