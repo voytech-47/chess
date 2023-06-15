@@ -1,3 +1,5 @@
+import os
+
 from Figures.Chessfigure import Chessfigure
 from colors import red, green
 
@@ -28,8 +30,9 @@ class Pawn(Chessfigure):
         self._directions = directions
 
     def __str__(self):
-        return f"{green('P') if self.get_color() == 'white' else red('P')}"
-        # return f"{'♙' if self.get_color() == 'white' else '♟︎'}"
+        if os.getenv("PYCHARM_HOSTED") is not None:
+            return f"{green('P') if self.get_color() == 'white' else red('P')}"
+        return f"{'♙' if self.get_color() == 'white' else '♟'}"
 
     def is_move_possible(self, source, destination):
         if source.get_x() == destination.get_x():
