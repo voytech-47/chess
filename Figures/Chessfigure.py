@@ -91,23 +91,33 @@ class Chessfigure:
         stop = abs(source.get_x() - destination.get_x())
         if source.get_x() < destination.get_x() and source.get_y() < destination.get_y():
             for xy in range(stop):
-                if board[source.get_y() + xy + 1][source.get_x() + xy + 1].get_figure() is not None:
-                    if board[source.get_y() + xy + 1][source.get_x() + xy + 1] \
-                            .get_figure().get_color() == source.get_figure().get_color():
-                        return False
+                current_cell = board[source.get_y() + xy + 1][source.get_x() + xy + 1]
+                if current_cell.get_figure() is not None:
+                    if current_cell == destination:
+                        return True
+                    return False
             return True
         elif source.get_x() < destination.get_x() and source.get_y() > destination.get_y():
             for xy in range(stop):
-                if board[source.get_y() - xy - 1][source.get_x() + xy + 1].get_figure() is not None:
+                current_cell = board[source.get_y() - xy - 1][source.get_x() + xy + 1]
+                if current_cell.get_figure() is not None:
+                    if current_cell == destination:
+                        return True
                     return False
             return True
         elif source.get_x() > destination.get_x() and source.get_y() > destination.get_y():
             for xy in range(stop):
-                if board[source.get_y() - 1 - xy][source.get_x() - 1 - xy].get_figure() is not None:
+                current_cell = board[source.get_y() - 1 - xy][source.get_x() - 1 - xy]
+                if current_cell.get_figure() is not None:
+                    if current_cell == destination:
+                        return True
                     return False
             return True
         elif source.get_x() > destination.get_x() and source.get_y() < destination.get_y():
             for xy in range(stop):
-                if board[source.get_y() + 1 + xy][source.get_x() - 1 - xy].get_figure() is not None:
+                current_cell = board[source.get_y() + 1 + xy][source.get_x() - 1 - xy]
+                if current_cell.get_figure() is not None:
+                    if current_cell == destination:
+                        return True
                     return False
             return True

@@ -126,7 +126,8 @@ class Board:
     def check_horizontal_check(self, king: Cell):
         row = self.get_board()[king.get_y()]
         for cell in row:
-            if cell.get_figure() is not None and cell.get_figure().is_move_possible(cell, king) and cell is not king:
+            if cell.get_figure() is not None and cell.get_figure().is_move_legal(cell, king,
+                                                                                 self.get_board()) and cell is not king:
                 return True
         return False
 
@@ -135,7 +136,8 @@ class Board:
         x = king.get_x()
         for i in range(8):
             cell = board[i][x]
-            if cell.get_figure() is not None and cell.get_figure().is_move_possible(cell, king) and cell is not king:
+            if cell.get_figure() is not None and cell.get_figure().is_move_legal(cell, king,
+                                                                                 self.get_board()) and cell is not king:
                 return True
         return False
 
@@ -145,7 +147,7 @@ class Board:
         y = king.get_y()
         while x > 0 and y > 0:
             cell = board[y - 1][x - 1]
-            if cell.get_figure() is not None and cell.get_figure().is_move_possible(cell, king):
+            if cell.get_figure() is not None and cell.get_figure().is_move_legal(cell, king, self.get_board()):
                 return True
             x, y = x - 1, y - 1
 
@@ -153,7 +155,7 @@ class Board:
         y = king.get_y()
         while x < 7 and y < 7:
             cell = board[y + 1][x + 1]
-            if cell.get_figure() is not None and cell.get_figure().is_move_possible(cell, king):
+            if cell.get_figure() is not None and cell.get_figure().is_move_legal(cell, king, self.get_board()):
                 return True
             x, y = x + 1, y + 1
 
@@ -161,7 +163,7 @@ class Board:
         y = king.get_y()
         while x > 0 and y < 7:
             cell = board[y + 1][x - 1]
-            if cell.get_figure() is not None and cell.get_figure().is_move_possible(cell, king):
+            if cell.get_figure() is not None and cell.get_figure().is_move_legal(cell, king, self.get_board()):
                 return True
             x, y = x - 1, y + 1
 
@@ -169,7 +171,7 @@ class Board:
         y = king.get_y()
         while x < 7 and y > 0:
             cell = board[y - 1][x + 1]
-            if cell.get_figure() is not None and cell.get_figure().is_move_possible(cell, king):
+            if cell.get_figure() is not None and cell.get_figure().is_move_legal(cell, king, self.get_board()):
                 return True
             x, y = x + 1, y - 1
 
